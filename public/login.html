@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scissor - Welcome</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #161515;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: #ffffff18;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: auto;
+    width: 500px;
+    max-width: 90%;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color:aliceblue;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input, button {
+    margin: 10px 0;
+}
+
+label {
+    margin-bottom: 4px;
+    color: aliceblue;
+}
+
+button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+a {
+    color: #007bff;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+input.email {
+    width: 96%;
+    height: 40px;
+    background-color: rgba(243, 244, 245, 0.13);
+    border-radius: 4px;
+    border: 1px solid silver;
+    margin: 10px 0 18px 0;
+    padding-left: 16px;
+    
+}
+
+input.password {
+    width: 96%;
+    height: 40px;
+    background-color: rgb(243, 244, 245, 0.13);
+    border-radius: 4px;
+    border: 1px solid silver;
+    margin: 10px 0 18px 0;
+    padding-left: 16px;
+    
+}
+
+@media only screen and (max-width: 600px) {
+           .container {
+            margin: 10%;
+           }
+
+           input.email {
+            margin: 0px 0 18px 0;  
+            }
+
+            input.password {
+            margin: 0px 0 18px 0;  
+            }
+
+            p, label {
+            font-size: 14px;
+            }
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Log in to your account</h1>
+        <form onsubmit="handleLogin(event)" action="/auth/login" method="POST" id="loginForm">
+            <label for="email">Email:</label>
+            <input type="email" class="email" name="email" id="email" required>
+            <label for="password">Password:</label>
+            <input type="password" class="password" name="password" id="password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p style="color: aliceblue;">Don't have an account? <a href="http://localhost:3000/register.html">Register</a></p>
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        // Define the handleLogin function
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Login failed. Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const accessToken = data.accessToken && data.accessToken.access_token ? data.accessToken.access_token : undefined;
+console.log('Response data:', data); // Debugging line to check the response structure
+console.log('Login successful:', accessToken);
+
+// Ensure the token is not undefined
+if (!accessToken) {
+    console.error('Access token is missing from the response.');
+    // Optionally show an error message to the user
+    return;
+}
+
+                // Store the token in local storage
+        localStorage.setItem('token', accessToken);
+
+    
+                window.location.href = '/home.html'; // Redirect to home page
+            } catch (error) {
+                //console.error('Error:', error); 
+            }
+        }
+
+        // Ensure the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+            loginForm.addEventListener('submit', handleLogin); 
+
+        
+
+            /*function showMessage(message, className) {
+                const messageDiv = document.getElementById('message');
+                messageDiv.textContent = message;
+                messageDiv.className = `message ${className}`;
+                messageDiv.style.display = 'block';
+
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 3000);
+            }*/
+        });
+    </script>
+</body>
+</html>
