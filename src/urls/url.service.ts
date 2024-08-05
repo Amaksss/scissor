@@ -12,7 +12,7 @@ import axios from 'axios';
 @Injectable()
 export class UrlService {
 
-  private readonly BASE_URL = 'https://scissor-t2n9.onrender.com/'; // Add your base URL here
+  private readonly BASE_URL = 'https://scissor-t2n9.onrender.com/urls/'; // Add your base URL here
 
   constructor(@InjectModel(Url.name) private readonly urlModel: Model<UrlDocument>) {}
 
