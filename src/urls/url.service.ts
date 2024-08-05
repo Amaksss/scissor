@@ -12,6 +12,8 @@ import axios from 'axios';
 @Injectable()
 export class UrlService {
 
+  private readonly BASE_URL = 'https://scissor-t2n9.onrender.com/'; // Add your base URL here
+
   constructor(@InjectModel(Url.name) private readonly urlModel: Model<UrlDocument>) {}
 
   async shortenUrl(createUrlDto: CreateUrlDto, userId: string): Promise<Url> {
@@ -37,7 +39,10 @@ export class UrlService {
       shortUrl = this.generateShortUrl();
     }
 
-    const qrCodeUrl = await this.generateQrCode(shortUrl);
+    const fullShortUrl = `${this.BASE_URL}${shortUrl}`; // Full URL with base
+    const qrCodeUrl = await this.generateQrCode(fullShortUrl); // Generate QR code with full URL
+
+    //const qrCodeUrl = await this.generateQrCode(shortUrl);
 
     const createdUrl = new this.urlModel({
       originalUrl,
