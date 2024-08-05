@@ -177,6 +177,28 @@ input.link {
             color: #333; /* Dark text color for links */
         }
 
+        .checkbox-container {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        gap: 16px;
+        }
+
+    .checkbox-container input[type="checkbox"] {
+    margin-right: 20px; /* Space between checkbox and label */
+    }
+
+    .checkbox-container label {
+    margin: 0; /* Remove default margin */
+    color: aliceblue;
+    }
+
+
+    .qr {
+        margin-bottom: 0px;
+        font-size: 12px;
+        font-style: italic;
+    }
 
         @media only screen and (max-width: 600px) {
            .container {
@@ -215,7 +237,14 @@ input.link {
                 <input type="url" class="link" name="link" placeholder="https://www.google.com" id="originalUrl" required>
 
                 <label for="link">Custom URL</label>
-                <input class="link" name="customAlias" id="customAlias">
+                <input class="link" name="customAlias" id="customAlias" placeholder="asdfghj">
+
+                <div><p class="qr">(Please tick if preferred)</p></div>
+
+                <div class="checkbox-container">
+                <label for="generateQr">Generate QR Code</label>
+                <input type="checkbox" name="generateQr" id="generateQr">
+                </div>
 
                 <button type="submit">Shorten link</button>
             </form>
@@ -223,6 +252,8 @@ input.link {
             <div id="shortenedUrlContainer">
                 <p>Your shortened URL: <span id="shortenedUrl"></span></p>
                 <button id="copyButton">Copy</button>
+                <div id="qrCodeContainer"></div>
+
             </div>
 
             <div id="message" class="message"></div>
@@ -243,10 +274,12 @@ input.link {
             const shortenForm = document.getElementById('shortenForm');
             const originalUrlInput = document.getElementById('originalUrl');
             const customAliasInput = document.getElementById('customAlias');
+            const generateQrInput = document.getElementById('generateQr');
             const shortenedUrlContainer = document.getElementById('shortenedUrlContainer');
             const shortenedUrlText = document.getElementById('shortenedUrl');
             const copyButton = document.getElementById('copyButton');
             const messageDiv = document.getElementById('message');
+            const qrCodeContainer = document.getElementById('qrCodeContainer');
             const historyButton = document.getElementById('historyButton'); // Add this line
         const historyContainer = document.getElementById('historyContainer');
         const historyModal = document.getElementById('historyModal');
@@ -265,6 +298,7 @@ input.link {
                 e.preventDefault();
                 const originalUrl = originalUrlInput.value;
                 const customAlias = customAliasInput.value;
+                const generateQr = generateQrInput.checked;
                 const token = getToken(); // Retrieve token
 
 
@@ -281,7 +315,7 @@ input.link {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${token}` // Send token as a Bearer token
                         },
-                        body: JSON.stringify({ originalUrl, customShortUrl: customAlias })
+                        body: JSON.stringify({ originalUrl, customShortUrl: customAlias, generateQr })
                     });
     
                     if (!response.ok) {
@@ -292,6 +326,16 @@ input.link {
                     const fullShortUrl = `${BASE_URL}${data.shortUrl}`;
                     shortenedUrlText.textContent = fullShortUrl;
                     shortenedUrlContainer.style.display = 'block';
+
+                    if (data.qrCode) {
+                    const qrCodeImage = new Image();
+                    qrCodeImage.src = data.qrCode;
+                    qrCodeContainer.innerHTML = '';
+                    qrCodeContainer.appendChild(qrCodeImage);
+                    } else {
+                        qrCodeContainer.innerHTML = '';
+                    }
+
                     showMessage('URL shortened successfully!', 'success-message');
                 } catch (error) {
                     console.error('Error:', error);
