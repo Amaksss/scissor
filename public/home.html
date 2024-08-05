@@ -252,7 +252,7 @@ input.link {
         const historyModal = document.getElementById('historyModal');
         const closeHistoryModal = document.getElementById('closeHistoryModal');
 
-        const BASE_URL = 'http://localhost:4000/urls/'; // Define your base URL
+        const BASE_URL = 'https://scissor-t2n9.onrender.com/urls/'; // Define your base URL
     
             function getToken() {
         const token = localStorage.getItem('token');
@@ -275,7 +275,7 @@ input.link {
         }
     
                 try {
-                    const response = await fetch('/urls/shorten', {
+                    const response = await fetch(`${BASE_URL}shorten`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -337,7 +337,7 @@ input.link {
 
 
         // Fetch history
-        const response = await fetch(`/urls/${userId}/history`, {
+        const response = await fetch(`${BASE_URL}${userId}/history`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
