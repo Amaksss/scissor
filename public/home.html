@@ -324,17 +324,21 @@ input.link {
     
                     const data = await response.json();
                     const fullShortUrl = `${BASE_URL}${data.shortUrl}`;
+                    //const qrCodeUrl = result.qrCode; // Get the QR code URL from the response
                     shortenedUrlText.textContent = fullShortUrl;
                     shortenedUrlContainer.style.display = 'block';
 
-                    if (data.qrCode) {
-                    const qrCodeImage = new Image();
-                    qrCodeImage.src = data.qrCode;
-                    qrCodeContainer.innerHTML = '';
-                    qrCodeContainer.appendChild(qrCodeImage);
-                    } else {
-                        qrCodeContainer.innerHTML = '';
-                    }
+                    if (data.qrCodeUrl) {
+                qrCodeContainer.innerHTML = `<img src="${qrCodeUrl}" alt="QR Code" />`;
+                qrCodeContainer.style.display = 'block';
+            } else {
+                qrCodeContainer.innerHTML = '';
+                qrCodeContainer.style.display = 'none';
+            }
+
+            originalUrlInput.value = '';
+            customAliasInput.value = '';
+            generateQrInput.checked = false; // Reset the checkbox state
 
                     showMessage('URL shortened successfully!', 'success-message');
                 } catch (error) {
