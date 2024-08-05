@@ -301,6 +301,12 @@ input.link {
                 const generateQr = generateQrInput.checked;
                 const token = getToken(); // Retrieve token
 
+                console.log({
+            originalUrl,
+            customShortUrl: customAlias,
+            generateQr
+            });
+
 
                 if (!token) {
             console.error('Token not found');
@@ -331,10 +337,10 @@ input.link {
                     if (data.qrCodeUrl) {
                 qrCodeContainer.innerHTML = `<img src="${qrCodeUrl}" alt="QR Code" />`;
                 qrCodeContainer.style.display = 'block';
-            } else {
+                } else {
                 qrCodeContainer.innerHTML = '';
                 qrCodeContainer.style.display = 'none';
-            }
+                }
 
             originalUrlInput.value = '';
             customAliasInput.value = '';
