@@ -40,6 +40,7 @@ export class UrlService {
     }
 
     const fullShortUrl = `${this.BASE_URL}${shortUrl}`; // Full URL with base
+    console.log('Full Short URL:', fullShortUrl);
     const qrCodeUrl = await this.generateQrCode(fullShortUrl); // Generate QR code with full URL
 
     //const qrCodeUrl = await this.generateQrCode(shortUrl);
@@ -70,7 +71,10 @@ export class UrlService {
   // Helper method to generate a QR code
   private async generateQrCode(url: string): Promise<string> {
     try {
-      return await QRCode.toDataURL(url);
+      //return await QRCode.toDataURL(url);
+      const qrCodeDataUrl = await QRCode.toDataURL(url);
+    console.log('QR Code Data URL:', qrCodeDataUrl); // Check this URL to verify content
+    return qrCodeDataUrl;
     } catch (error) {
       throw new HttpException('Failed to generate QR code', HttpStatus.INTERNAL_SERVER_ERROR);
     }
