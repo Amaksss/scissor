@@ -161,6 +161,7 @@ input.password {
                     // Hide the message after 3 seconds
                     setTimeout(() => {
                         successMessage.classList.add('hidden');
+                        window.location.href = '/index.html'; // Redirect to home page
                     }, 5000);
                 } else {
                     // Handle errors (e.g., show an error message)
