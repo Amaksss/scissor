@@ -17,7 +17,7 @@ export class UrlService {
   constructor(@InjectModel(Url.name) private readonly urlModel: Model<UrlDocument>) {}
 
   async shortenUrl(createUrlDto: CreateUrlDto, userId: string): Promise<Url> {
-    const { originalUrl, customShortUrl } = createUrlDto;
+    const { originalUrl, customShortUrl, generateQr } = createUrlDto;
 
     // Check cache for existing short URL for the given original URL
     const cacheKey = `shortened_${originalUrl}`;
@@ -41,9 +41,14 @@ export class UrlService {
 
     const fullShortUrl = `${this.BASE_URL}${shortUrl}`; // Full URL with base
     console.log('Full Short URL:', fullShortUrl);
-    const qrCodeUrl = await this.generateQrCode(fullShortUrl); // Generate QR code with full URL
 
-    //const qrCodeUrl = await this.generateQrCode(shortUrl);
+    let qrCodeUrl = null;
+    if (generateQr === true) { // Check if QR code generation is requested
+      qrCodeUrl = await this.generateQrCode(fullShortUrl); // Generate QR code with full URL
+    }
+    //const qrCodeUrl = await this.generateQrCode(fullShortUrl); // Generate QR code with full URL
+
+    
 
     const createdUrl = new this.urlModel({
       originalUrl,
