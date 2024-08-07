@@ -13,10 +13,17 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(email: string, password: string): Promise<User> {
+  async register(email: string, password: string): Promise<{message: string; userId: string}> {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new this.userModel({ email, password: hashedPassword });
-    return newUser.save();
+    //return newUser.save();
+    const savedUser = await newUser.save();
+
+    // Return custom message and user ID
+    return {
+      message: "User registered successfully",
+      userId: savedUser._id.toString(),
+    };
   }
 
   async findOneByEmail(email: string): Promise<UserDocument | undefined> {
